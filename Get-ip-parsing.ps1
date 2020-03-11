@@ -20,7 +20,7 @@ V0.4  22/10/2019 - Add PostgreSQL search
 #>
 
 
-# Connect to the 3cx Postgre database and get ip from blacklicst table
+# Connect to the 3cx Postgre database and get ip from blacklist table
 function Get-postgreSQL-Data{
    param([string]$query=$(throw 'query is required.'))
    $conn = New-Object System.Data.Odbc.OdbcConnection
@@ -89,12 +89,12 @@ If (Get-content -Path "C:\ProgramData\3CX\Instance1\Data\Logs\3cx_fbl.txt" |  ?{
 }
 
 
-sleep 2
+Start-sleep 2
 
 SendFtp
 
 Remove-Item "C:\ProgramData\3CX\Instance1\Data\Logs\3cx_chbl.txt" -Force
 
-sleep 5
+Start-sleep 4
 
 New-Item -Path "C:\ProgramData\3CX\Instance1\Data\Logs\3cx_bl.txt" -ItemType "file" -Force
