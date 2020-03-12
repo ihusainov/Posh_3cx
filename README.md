@@ -1,3 +1,8 @@
 # Posh_3cx
  
-Script in powershell to add ip addresses from database blacklist table. Then send file to ftp and received from Mikrotik. After that Mikrotik read this file and add blacklisted ip in his Firewall for block connection.
+Script in powershell to add ip addresses from 3CX database blacklist table. Then send file to ftp and then received from Mikrotik. 
+After that Mikrotik start script "Add3cxBLmikrotik.txt" and add blacklisted ip in his Firewall for block connection.
+
+
+Add script "Add3cxBLmikrotik.txt" in MikriTik:
+Start Winbox - System - Scripts - Add
