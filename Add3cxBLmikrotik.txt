@@ -1,0 +1,50 @@
+/tool fetch url="ftp://192.168.0.21/3cx/3cx_bl.txt" user=ftpuser  password=ftpPassword dst-path=3cx_bl.txt
+:delay 2s;
+if ( [/file get [/file find name=3cx_bl.txt] size] > 0 ) do={
+
+
+/file print file=rezult.txt
+
+
+:global content [/file get [/file find name="3cx_bl.txt"] contents] ;
+:global contentLen [ :len $content ] ;
+:global lineEnd 0;
+:global line "";
+:global lastEnd 0;
+:global lineoffile "";
+
+
+:do {
+:set lineEnd [:find $content "\n" $lastEnd ] ;
+:set line [:pick $content $lastEnd $lineEnd] ;
+:set lastEnd ( $lineEnd + 1 ) ;
+
+:local entry [:pick $line 0 ($lineEnd) ]
+:if ( [:len $entry ] > 0 ) do={
+/log info $entry;
+:set $lineoffile ($lineoffile . "/ip firewall address-list add list=3cxBlackList " . "address=" . $line);
+:delay 300ms;
+}
+} while ($lineEnd < $contentLen - 1) 
+
+/file set rezult.txt contents=$lineoffile
+:delay 2s;
+/tool fetch address="1.1.1.1" src-path="rezult.txt" user="root" mode=ftp password="rootPassword" dst-path="rezult.rsc" upload=yes
+:delay 2s;
+
+/file remove rezult.txt;
+/file remove "3cx_bl.txt";
+/import rezult.rsc
+:delay 2s;
+/file remove rezult.rsc;
+
+/file print file=blank.txt
+:delay 1s;
+:local zero ""
+/file set blank.txt contents=$zero
+:delay 1s;
+/tool fetch address="192.168.0.21" src-path="blank.txt" user=ftpuser mode=ftp password=ftpPassword dst-path="3cx/3cx_bl.txt" upload=yes
+:delay 1s;
+/file remove blank.txt;
+
+}
