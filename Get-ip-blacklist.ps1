@@ -1,19 +1,16 @@
-﻿<#
+<#
 .SYNOPSIS 
-
-Чтение логов 3cx и поиск строк "many failed authentications"
-Далее по строке находим с какого ip происходили подключения и сохраняем ip  в файле 3cx_bl.txt
+Read 3cx log file and then parse to row with "many failed authentications"
+Next we find ip and add to file 3cx_bl.txt
+Then we send this file to mikrotik router
  
 .DESCRIPTION
-
-Необходимо запускать скрипт из Powershell
- 
-.OUTPUTS 
+Execute from Powershell
 
 .NOTES 
-Written by:  ih
+Written by:  Ildar Khusyainov
  
-Change Log  
+Change Log
 V0.2  08/10/2019 - Stable version
 V0.3  14/10/2019 - Add SendFtp
 V0.4  22/10/2019 - Add PostgreSQL search
@@ -61,8 +58,7 @@ Try{
 $ipData = Get-content -Path "C:\ProgramData\3CX\Instance1\Data\Logs\3cx_chbl.txt" | ?{$_ -match "\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"} | %{$Matches[0]} | ?{$_ -notmatch "192\.168\.\d{1,3}\.\d{1,3}" -and $_ -notmatch "255\.255\.\d{1,3}\.\d{1,3}" -and $_ -notmatch "127\.0\.\d{1,3}\.\d{1,3}"} | %{$Matches[0] -replace "'r*'"}
 
 
-# Для каждого данного из массива производим проверку на существование в файле 3cx_fbl.txt
-# и если данные уже есть в файле то не записываем, иначе записываем в файл 3cx_bl.txt.
+# Check in array if ip exists in 3cx_fbl.txt and if ip exists dont add to file ip
 
 ForEach ($ip in $ipData){
 
